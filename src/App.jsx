@@ -1,10 +1,10 @@
 import './App.css'
 
-function App() {
+// pages imports
+import Auth from './pages/Auth'
 
-  return (
-    <h1>WoofWatchers</h1>  
-  )
+const App = () => {
+  return <Auth />
 }
 
 export default App
