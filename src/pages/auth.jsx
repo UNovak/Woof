@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { supabase } from '../supabase'
 import logo from '../assets/logo.png'
 
 const Auth = () => {
@@ -18,9 +19,18 @@ const Auth = () => {
     console.log('login', email, password)
   }
 
-  const handleSignUp = e => {
+  const handleSignUp = async e => {
     e.preventDefault()
-    console.log('signUp', email, password)
+    const { user, error } = await supabase.auth.signUp({
+      email: email,
+      password: password,
+    })
+
+    if (error) {
+      console.log('unable to signUp', email, password)
+    } else {
+      console.log('signed up')
+    }
   }
 
   return (
@@ -31,7 +41,7 @@ const Auth = () => {
           <h4 className='card-title pt-3'>Woof Watchers</h4>
         </div>
         <div className='card-body'>
-          <form className='p-1'>
+          <form className='p-1' method='POST'>
             <div className='form-group-sm'>
               <input
                 className='mb-2'
