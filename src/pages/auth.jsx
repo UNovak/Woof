@@ -14,9 +14,21 @@ const Auth = () => {
     setPassword(newPassword)
   }
 
-  const handleLogin = e => {
+  const handleLogin = async e => {
     e.preventDefault()
-    console.log('login', email, password)
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password,
+    })
+
+    console.log(supabase.auth.getSession())
+
+    if (error) {
+      console.log('Faild to login with error: ' + error)
+    } else {
+      console.log('logged in with: ' + data)
+    }
   }
 
   const handleSignUp = async e => {
@@ -29,6 +41,7 @@ const Auth = () => {
 
     if (error) {
       console.log('unable to signUp', email, password)
+      console.log('with error:' + error)
     } else {
       console.log('signed up')
     }
