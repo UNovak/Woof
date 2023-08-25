@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { supabase } from '../supabase'
 import logo from '../assets/logo.png'
 
-const Auth = () => {
+const Auth = ({ onAuthentication }) => {
   const [email, setEmail] = useState(null)
   const [password, setPassword] = useState(null)
 
@@ -27,14 +27,17 @@ const Auth = () => {
     if (error) {
       console.log('Faild to login with error: ' + error)
     } else {
-      console.log('logged in with: ' + data)
+      // console.log('logged in')
+      // console.log('user:', data.user)
+      // console.log('session:', data.session)
+      onAuthentication(data.session)
     }
   }
 
   const handleSignUp = async e => {
     e.preventDefault()
     // eslint-disable-next-line no-unused-vars
-    const { user, error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email: email,
       password: password,
     })
@@ -43,7 +46,10 @@ const Auth = () => {
       console.log('unable to signUp', email, password)
       console.log('with error:' + error)
     } else {
-      console.log('signed up')
+      // console.log('signed up')
+      // console.log('user:', data.user)
+      // console.log('session:', data.session)
+      onAuthentication(data.session)
     }
   }
 
