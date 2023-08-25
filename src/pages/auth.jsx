@@ -21,6 +21,7 @@ const Auth = () => {
 
   const handleSignUp = async e => {
     e.preventDefault()
+    // eslint-disable-next-line no-unused-vars
     const { user, error } = await supabase.auth.signUp({
       email: email,
       password: password,
