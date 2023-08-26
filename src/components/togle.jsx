@@ -6,7 +6,7 @@ const Togle = () => {
   const { owner, handleOwner } = useOwner()
 
   return (
-    <div className='container-sm d-flex'>
+    <div className='container-sm d-flex align-items-center justify-content-center'>
       <span className='togle-text'>Owner</span>
       <input
         checked={owner}

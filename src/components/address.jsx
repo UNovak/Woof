@@ -40,7 +40,7 @@ const Address = ({ onSelect }) => {
   }
 
   return (
-    <div>
+    <div className='w-3rem'>
       <input
         type='text'
         value={inputValue}
