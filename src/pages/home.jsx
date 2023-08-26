@@ -1,7 +1,17 @@
 import React from 'react'
+import { useState, useEffect } from 'react'
 
-const Home = () => {
-  return <div>Home</div>
+const Home = ({ id }) => {
+  console.log(JSON.parse(sessionStorage.getItem('id')))
+  console.log(JSON.parse(sessionStorage.getItem('session')))
+  return (
+    <div>
+      <p>id: {JSON.stringify(JSON.parse(sessionStorage.getItem('id')))}</p>
+      <p>
+        session: {JSON.stringify(JSON.parse(sessionStorage.getItem('session')))}
+      </p>
+    </div>
+  )
 }
 
 export default Home

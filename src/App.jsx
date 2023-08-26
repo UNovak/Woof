@@ -2,6 +2,7 @@ import './App.css'
 import { useState, useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Private from './utils/private'
+import { supabase } from './supabase'
 
 // component imports
 import Navbar from './components/navbar'
@@ -15,15 +16,46 @@ import Register from './pages/register'
 
 const App = () => {
   const [session, setSession] = useState(null)
-  const [logged_in, setLoggedIn] = useState(true)
+  const [id, setID] = useState(null)
+  const [loading,setLoading] = useState(true)
 
   useEffect(() => {
-    if (session === null) {
-      setLoggedIn(false)
-    } else {
-      setLoggedIn(true)
+    setID(id)
+  }, [id])
+
+  useEffect(() => {
+    const storedSession = sessionStorage.getItem('session')
+    const storedID = sessionStorage.getItem('id')
+
+    if (storedSession) {
+      setSession(JSON.parse(storedSession))
+      setID(JSON.parse(storedID))
     }
-    console.log(session)
+
+    setLoading(false)
+  }, [])
+
+  useEffect(() => {
+    const getID = async () => {
+      let { data: profiles, error } = await supabase
+        .from('profiles')
+        .select('id')
+
+      if (error) {
+        console.log(error)
+      } else {
+        setID(profiles)
+        sessionStorage.setItem('id', JSON.stringify(profiles))
+      }
+    }
+
+    if (session === null) {
+      sessionStorage.clear()
+    } else {
+      getID()
+      sessionStorage.setItem('id', JSON.stringify(id))
+      sessionStorage.setItem('session', JSON.stringify(session))
+    }
   }, [session])
 
   const handleAuthentication = value => {
@@ -32,8 +64,8 @@ const App = () => {
 
   return (
     <Routes>
-      <Route element={<Private session={session} />}>
-        <Route element={<Home />} path='/' />
+      <Route element={<Private session={session} status={loading} />}>
+        <Route element={<Home id={id} />} path='/' />
         <Route element={<Settings />} path='settings' />
         <Route element={<Search />} path='search' />
         <Route element={<Register />} path='register' />
