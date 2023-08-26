@@ -8,6 +8,8 @@ const Auth = ({ onAuthentication }) => {
   const navigate = useNavigate()
   const [email, setEmail] = useState(null)
   const [password, setPassword] = useState(null)
+  const [login_loading, setLogin_loading] = useState(false)
+  const [signUp_loading, setSignUp_loading] = useState(false)
 
   const handleEmail = newEmail => {
     setEmail(newEmail)
@@ -19,6 +21,7 @@ const Auth = ({ onAuthentication }) => {
 
   const handleLogin = async e => {
     e.preventDefault()
+    setLogin_loading(true)
 
     const { data, error } = await supabase.auth.signInWithPassword({
       email: email,
@@ -36,10 +39,13 @@ const Auth = ({ onAuthentication }) => {
       onAuthentication(data.session)
       navigate('/')
     }
+    setLogin_loading(false)
   }
 
   const handleSignUp = async e => {
     e.preventDefault()
+    setSignUp_loading(true)
+
     // eslint-disable-next-line no-unused-vars
     const { data, error } = await supabase.auth.signUp({
       email: email,
@@ -56,6 +62,51 @@ const Auth = ({ onAuthentication }) => {
       onAuthentication(data.session)
       navigate('/register')
     }
+    setSignUp_loading(false)
+  }
+
+  const renderLoading = () => {
+    return login_loading ? (
+      <button
+        className='btn btn-outline-success btn-sm w-50 m-1'
+        onClick={e => handleLogin(e)}
+        disabled>
+        <div
+          className='spinner-border spinner-border-sm text-success'
+          role='status'>
+          <span className='visually-hidden'>Loading...</span>
+        </div>
+      </button>
+    ) : (
+      <button
+        className='btn btn-outline-success btn-sm w-50 m-1'
+        onClick={e => handleLogin(e)}
+        disabled={signUp_loading}>
+        Login
+      </button>
+    )
+  }
+
+  const renderSignUp = () => {
+    return signUp_loading ? (
+      <button
+        className='btn btn-outline-success btn-sm w-50 m-1'
+        onClick={e => handleLogin(e)}
+        disabled>
+        <div
+          className='spinner-border spinner-border-sm text-success'
+          role='status'>
+          <span className='visually-hidden'>Loading...</span>
+        </div>
+      </button>
+    ) : (
+      <button
+        className='btn btn-outline-success btn-sm m-1 w-50'
+        onClick={e => handleSignUp(e)}
+        disabled={login_loading}>
+        Sign Up
+      </button>
+    )
   }
 
   return (
@@ -88,16 +139,8 @@ const Auth = ({ onAuthentication }) => {
               />
             </div>
             <div>
-              <button
-                className='btn btn-outline-success btn-sm w-50 m-1'
-                onClick={e => handleLogin(e)}>
-                Login
-              </button>
-              <button
-                className='btn btn-outline-success btn-sm m-1 w-50'
-                onClick={e => handleSignUp(e)}>
-                Sign Up
-              </button>
+              {renderLoading()}
+              {renderSignUp()}
             </div>
           </form>
         </div>

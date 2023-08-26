@@ -20,12 +20,11 @@ const App = () => {
   useEffect(() => {
     if (session === null) {
       setLoggedIn(false)
-      console.log(`is login status: ${logged_in}`)
     } else {
       setLoggedIn(true)
-      console.log(`is logged in: ${logged_in}`)
     }
-  }, [session, logged_in])
+    console.log(session)
+  }, [session])
 
   const handleAuthentication = value => {
     setSession(value)
@@ -33,7 +32,7 @@ const App = () => {
 
   return (
     <Routes>
-      <Route element={<Private status={logged_in} />}>
+      <Route element={<Private session={session} />}>
         <Route element={<Home />} path='/' />
         <Route element={<Settings />} path='settings' />
         <Route element={<Search />} path='search' />

@@ -4,8 +4,8 @@ import { Fragment } from 'react'
 
 import React from 'react'
 
-const Private = ({ status }) => {
-  return status ? (
+const Private = ({ session }) => {
+  return session !== null ? (
     <Fragment>
       <Navbar />
       <Outlet />
