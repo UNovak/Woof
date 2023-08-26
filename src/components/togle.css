@@ -1,0 +1,45 @@
+.togle-checkbox {
+  height: 0;
+  width: 0;
+  visibility: hidden;
+}
+
+.togle-text {
+  margin: 0 10px;
+  color: #000000;
+}
+
+.togle-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  width: 3em;
+  height: 1.5em;
+  background: grey;
+  border-radius: 3em;
+  position: relative;
+  transition: background-color .2s;
+}
+
+.togle-label .togle-button {
+  content: '';
+  position: absolute;
+  top: 0.05em;
+  left: 0.05em;
+  width: 1.4em;
+  height: 1.4em;
+  border-radius: 1.4em;
+  transition: 0.2s;
+  background: #fff;
+  box-shadow: 0 0 0.1em 0 rgba(10, 10, 10, 0.29);
+}
+
+.togle-checkbox:checked+.togle-label .togle-button {
+  left: calc(100% - 0.05em);
+  transform: translateX(-100%);
+}
+
+.togle-label:active .togle-button {
+  width: 1.6em;
+}

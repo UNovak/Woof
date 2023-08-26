@@ -1,8 +1,9 @@
 import './App.css'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, createContext } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Private from './utils/private'
 import { supabase } from './supabase'
+import { ContextProvider } from './utils/context'
 
 // component imports
 import Navbar from './components/navbar'
@@ -17,7 +18,7 @@ import Register from './pages/register'
 const App = () => {
   const [session, setSession] = useState(null)
   const [id, setID] = useState(null)
-  const [loading,setLoading] = useState(true)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     setID(id)
@@ -63,18 +64,20 @@ const App = () => {
   }
 
   return (
-    <Routes>
-      <Route element={<Private session={session} status={loading} />}>
-        <Route element={<Home id={id} />} path='/' />
-        <Route element={<Settings />} path='settings' />
-        <Route element={<Search />} path='search' />
-        <Route element={<Register />} path='register' />
-      </Route>
-      <Route
-        element={<Auth onAuthentication={handleAuthentication} />}
-        path='/login'
-      />
-    </Routes>
+    <ContextProvider>
+      <Routes>
+        <Route element={<Private session={session} status={loading} />}>
+          <Route element={<Home id={id} />} path='/' />
+          <Route element={<Settings />} path='settings' />
+          <Route element={<Search />} path='search' />
+          <Route element={<Register />} path='register' />
+        </Route>
+        <Route
+          element={<Auth onAuthentication={handleAuthentication} />}
+          path='/login'
+        />
+      </Routes>
+    </ContextProvider>
   )
 }
 
