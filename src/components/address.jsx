@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 
 const mapBoxToken = import.meta.env.VITE_MAPBOX_TOKEN
 
-const Address = () => {
+const Address = ({ onSelect }) => {
   const [inputValue, setInputValue] = useState('')
   const [suggestions, setSuggestions] = useState([])
   const [showSuggestions, setShowSuggestions] = useState(false)
@@ -31,7 +31,7 @@ const Address = () => {
   const handleSuggestionClick = suggestion => {
     setSuggestions([])
     setShowSuggestions(false) // Hide suggestions when an address is confirmed
-    setAddress(suggestion)
+    onSelect(suggestion)
     setInputValue('')
   }
 

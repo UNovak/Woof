@@ -11,14 +11,6 @@ const Auth = ({ onAuthentication }) => {
   const [login_loading, setLogin_loading] = useState(false)
   const [signUp_loading, setSignUp_loading] = useState(false)
 
-  const handleEmail = newEmail => {
-    setEmail(newEmail)
-  }
-
-  const handlePassword = newPassword => {
-    setPassword(newPassword)
-  }
-
   const handleLogin = async e => {
     e.preventDefault()
     setLogin_loading(true)
@@ -125,7 +117,7 @@ const Auth = ({ onAuthentication }) => {
                 id='email'
                 name='email'
                 placeholder='example@email.com'
-                onChange={e => handleEmail(e.target.value)}
+                onChange={e => setEmail(e.target.value)}
               />
             </div>
             <div className='form-group-sm'>
@@ -135,7 +127,7 @@ const Auth = ({ onAuthentication }) => {
                 id='password'
                 name='password'
                 placeholder='*********'
-                onChange={e => handlePassword(e.target.value)}
+                onChange={e => setPassword(e.target.value)}
               />
             </div>
             <div>
