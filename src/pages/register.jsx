@@ -13,8 +13,7 @@ const Register = () => {
 
   const handleSubmit = e => {
     e.preventDefault() // Prevent form submission and page refresh
-    console.log('submitted')
-    console.log(address)
+    // TODO - implement updating the data using supabase API
   }
 
   return (
@@ -92,3 +91,6 @@ const Register = () => {
 }
 
 export default Register
+
+// TODO - add fields to match the data stored in supabase
+// TODO - add a toggle for as_owner

@@ -47,3 +47,6 @@ const App = () => {
 }
 
 export default App
+
+// TODO - store login info in session data
+// TODO - useContext for session/logged_in?

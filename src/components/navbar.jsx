@@ -36,3 +36,7 @@ const Navbar = () => {
 }
 
 export default Navbar
+
+// TODO - Implement different rendering based on as_owner
+// TODO - Add a toggle allowing the user to change as_owner
+// TODO - Add a singOut button
