@@ -1,8 +1,11 @@
 import { useState } from 'react'
 import { supabase } from '../supabase'
 import logo from '../assets/logo.png'
+import { useNavigate } from 'react-router-dom'
 
+// eslint-disable-next-line react/prop-types
 const Auth = ({ onAuthentication }) => {
+  const navigate = useNavigate()
   const [email, setEmail] = useState(null)
   const [password, setPassword] = useState(null)
 
@@ -31,6 +34,7 @@ const Auth = ({ onAuthentication }) => {
       // console.log('user:', data.user)
       // console.log('session:', data.session)
       onAuthentication(data.session)
+      navigate('/')
     }
   }
 
@@ -50,6 +54,7 @@ const Auth = ({ onAuthentication }) => {
       // console.log('user:', data.user)
       // console.log('session:', data.session)
       onAuthentication(data.session)
+      navigate('/register')
     }
   }
 
