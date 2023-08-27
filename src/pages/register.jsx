@@ -1,25 +1,104 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Address from '../components/address'
 import Togle from '../components/togle'
+import { useOwner } from '../utils/context'
+import { supabase } from '../supabase'
+import { useNavigate } from 'react-router-dom'
+import Loading from '../components/loading'
 
 const Register = () => {
-  const email = 'example@example.com'
+  const navigate = useNavigate()
+  const { owner } = useOwner()
+
+  const [email, setEmail] = useState('')
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [address, setAddress] = useState('')
+  const [error, setError] = useState('')
+  const [id, setId] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   const handleAddressChange = newAddress => {
     setAddress(newAddress)
   }
 
-  const handleSubmit = e => {
+  useEffect(() => {
+    const storedData = JSON.parse(sessionStorage.getItem('id'))
+    const fetchedId = storedData ? storedData[0]?.id : null
+
+    if (fetchedId) {
+      setId(fetchedId)
+      getData()
+      console.log('Fatched id: ' + fetchedId)
+    } else {
+      console.log('Fetching ID failed')
+    }
+  }, [])
+
+  const getData = async () => {
+    let { data: profiles, error } = await supabase
+      .from('profiles')
+      .select('id,email,name,surname,address,as_owner')
+
+    if (error) {
+      console.log(error)
+    } else {
+      const profile = profiles[0]
+      setEmail(profile.email)
+      setFirstName(profile.name)
+      setLastName(profile.surname || '')
+      setAddress(profile.address || '')
+    }
+  }
+
+  const handleSubmit = async e => {
     e.preventDefault() // Prevent form submission and page refresh
-    // TODO - implement updating the data using supabase API
+    setLoading(true) // while submiting disable button
+
+    if (!email || !firstName || !lastName || !address) {
+      setError('All fields are required')
+    }
+
+    const { data, error } = await supabase
+      .from('profiles')
+      .update({
+        name: firstName,
+        surname: lastName,
+        address: address,
+        as_owner: owner,
+      })
+      .eq('id', id)
+      .select()
+
+    if (error) {
+      console.log(error)
+    }
+    if (data) {
+      console.log(data)
+      navigate('/')
+    }
+    setLoading(false)
+  }
+
+  const renderButton = () => {
+    return loading ? (
+      <button className='btn btn-outline-success  btn-sm w-25 m-1' disabled>
+        <div
+          className='spinner-border spinner-border-sm text-success'
+          role='status'>
+          <span className='visually-hidden'>Loading...</span>
+        </div>
+      </button>
+    ) : (
+      <button className='btn btn-outline-success btn-sm w-25 m-1' type='submit'>
+        Login
+      </button>
+    )
   }
 
   return (
-    <div className='d-flex justify-content-center align-items-center mt-5'>
-      <div className='col-lg-4'>
+    <div className='justify-content-center align-items-center d-flex'>
+      <div className='card mt-5 p-3 w-75' style={{ maxWidth: '400px' }}>
         <form onSubmit={handleSubmit}>
           <div className='form-floating mb-2'>
             <input
@@ -27,9 +106,8 @@ const Register = () => {
               className='form-control'
               id='email'
               aria-describedby='emailHelp'
-              placeholder={email}
-              value={'email@email'}
-              disabled
+              value={email}
+              readOnly={true}
             />
             <label htmlFor='email'>email</label>
           </div>
@@ -40,7 +118,7 @@ const Register = () => {
               type='text'
               className='form-control'
               id='name'
-              placeholder='name'
+              placeholder={'name'}
               onChange={e => setFirstName(e.target.value)}
             />
             <label htmlFor='name'>name</label>
@@ -65,7 +143,6 @@ const Register = () => {
               id='address'
               value={address}
               disabled
-              placeholder='address'
               onChange={e => setAddress(e.target.value)}
             />
             <label htmlFor='address'>address</label>
@@ -87,11 +164,14 @@ const Register = () => {
           </div>
 
           <div className='d-flex justify-content-center align-items-center'>
-            <button type='submit' className='btn btn btn-success w-25'>
-              SAVE
-            </button>
+            {renderButton()}
           </div>
         </form>
+        {
+          <p className='d-flex justify-content-center align-items-center mt-3 text-danger'>
+            {error}
+          </p>
+        }
       </div>
     </div>
   )
@@ -99,5 +179,4 @@ const Register = () => {
 
 export default Register
 
-// TODO - add fields to match the data stored in supabase
-// TODO - add a toggle for as_owner
+// TODO - remove navigation bar

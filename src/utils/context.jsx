@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 
 export const Context = createContext()
 
@@ -7,12 +7,15 @@ export const useOwner = () => {
 }
 
 export const ContextProvider = ({ children }) => {
-  const [owner, setOwner] = useState(false)
+  const [owner, setOwner] = useState(true)
 
   const handleOwner = () => {
     setOwner(!owner)
-    console.log('owner:', owner)
   }
+
+  useEffect(() => {
+    console.log('owner: ' + owner)
+  }, [owner])
 
   const value = {
     owner,

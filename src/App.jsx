@@ -6,7 +6,6 @@ import { supabase } from './supabase'
 import { ContextProvider } from './utils/context'
 
 // component imports
-import Navbar from './components/navbar'
 
 // page imports
 import Auth from './pages/Auth'
@@ -17,35 +16,31 @@ import Register from './pages/register'
 
 const App = () => {
   const [session, setSession] = useState(null)
-  const [id, setID] = useState(null)
+  const [id, setId] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    setID(id)
-  }, [id])
-
-  useEffect(() => {
     const storedSession = sessionStorage.getItem('session')
-    const storedID = sessionStorage.getItem('id')
+    const storedId = sessionStorage.getItem('id')
 
-    if (storedSession) {
+    if (storedSession && storedId) {
       setSession(JSON.parse(storedSession))
-      setID(JSON.parse(storedID))
+      setId(JSON.parse(storedId))
     }
-
     setLoading(false)
   }, [])
 
   useEffect(() => {
     const getID = async () => {
-      let { data: profiles, error } = await supabase
+      const { data: profiles, error } = await supabase
         .from('profiles')
         .select('id')
 
       if (error) {
-        console.log(error)
+        console.log('Error fetching profiles:', error)
+        return
       } else {
-        setID(profiles)
+        setId(profiles)
         sessionStorage.setItem('id', JSON.stringify(profiles))
       }
     }
@@ -66,7 +61,7 @@ const App = () => {
   return (
     <ContextProvider>
       <Routes>
-        <Route element={<Private session={session} status={loading} />}>
+        <Route element={<Private session={session} status={loading}/>}>
           <Route element={<Home id={id} />} path='/' />
           <Route element={<Settings />} path='settings' />
           <Route element={<Search />} path='search' />
@@ -82,6 +77,3 @@ const App = () => {
 }
 
 export default App
-
-// TODO - store login info in session data
-// TODO - useContext for session/logged_in?

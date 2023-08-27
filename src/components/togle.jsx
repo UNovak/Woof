@@ -7,7 +7,7 @@ const Togle = () => {
 
   return (
     <div className='container-sm d-flex align-items-center justify-content-center'>
-      <span className='togle-text'>Owner</span>
+      <span className='togle-text'>Guardian</span>
       <input
         checked={owner}
         onChange={handleOwner}
@@ -21,7 +21,7 @@ const Togle = () => {
         htmlFor={`togle-new`}>
         <span className={`togle-button`} />
       </label>
-      <span className='togle-text'>Guardian</span>
+      <span className='togle-text'>Owner</span>
     </div>
   )
 }
