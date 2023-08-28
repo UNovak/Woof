@@ -10,7 +10,6 @@ const Owner = () => {
   const [animals, setAnimals] = useState([])
   const [loading, setLoading] = useState(true)
   const [animalViews, setAnimalViews] = useState({})
-  const [newData, setNewData] = useState({})
 
   const getAnimals = async () => {
     let { data: animals, error } = await supabase
@@ -20,14 +19,9 @@ const Owner = () => {
     if (error) {
       console.error(error)
     } else {
-      console.log(animals)
       setAnimals(animals)
     }
   }
-
-  useEffect(() => {
-    console.log('newData changed:', newData)
-  }, [newData])
 
   useEffect(() => {
     if (id === null) {
@@ -56,7 +50,7 @@ const Owner = () => {
       console.log(error)
     } else {
       if (data) {
-        setAnimals([...animals, data]) // Only add non-null data
+        setAnimals([...animals, data])
       }
       getAnimals()
       setLoading(false)
@@ -68,10 +62,9 @@ const Owner = () => {
 
     if (error) {
       console.log(error)
-    } else {
-      console.log('deleted: ' + key)
     }
 
+    // remove deleted items from local storage
     const newAnimals = animals.filter(animal => animal.id !== key)
     setAnimals(newAnimals)
   }
@@ -89,8 +82,8 @@ const Owner = () => {
     if (error) {
       console.log(error)
     } else {
-      getAnimals()
-      setAnimalViews({ ...animalViews, [key]: 'look' })
+      getAnimals() // rerender the cards
+      setAnimalViews({ ...animalViews, [key]: 'look' }) // change view value back to 'look'
     }
   }
 
@@ -103,7 +96,6 @@ const Owner = () => {
       const view = animalViews[animal.id] || 'look' // Get the view for this animal
       return animal ? (
         <Animal
-          handleData={setNewData}
           data={animal}
           onDelete={() => handleDelete(animal.id)}
           onSave={(id, newTitle, newDescription) =>
