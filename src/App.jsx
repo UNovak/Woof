@@ -1,11 +1,11 @@
 import './App.css'
-import { useState, useEffect, createContext } from 'react'
-import { Routes, Route } from 'react-router-dom'
-import Private from './utils/private'
-import { supabase } from './supabase'
-import { ContextProvider } from './utils/context'
+import { useState, useEffect } from 'react'
+import { Routes, Route, useNavigate } from 'react-router-dom'
 
-// component imports
+// util imports
+import Private from './utils/private'
+import { supabase } from './utils/supabase'
+import { ContextProvider } from './utils/context'
 
 // page imports
 import Auth from './pages/Auth'
@@ -15,6 +15,7 @@ import Search from './pages/search'
 import Register from './pages/register'
 
 const App = () => {
+  const navigate = useNavigate()
   const [session, setSession] = useState(null)
   const [id, setId] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -23,7 +24,7 @@ const App = () => {
     const storedSession = sessionStorage.getItem('session')
     const storedId = sessionStorage.getItem('id')
 
-    if (storedSession && storedId) {
+    if (storedSession) {
       setSession(JSON.parse(storedSession))
       setId(JSON.parse(storedId))
     }
@@ -31,6 +32,7 @@ const App = () => {
   }, [])
 
   useEffect(() => {
+    setLoading(true)
     const getID = async () => {
       const { data: profiles, error } = await supabase
         .from('profiles')
@@ -52,6 +54,7 @@ const App = () => {
       sessionStorage.setItem('id', JSON.stringify(id))
       sessionStorage.setItem('session', JSON.stringify(session))
     }
+    setLoading(false)
   }, [session])
 
   const handleAuthentication = value => {
@@ -61,7 +64,7 @@ const App = () => {
   return (
     <ContextProvider>
       <Routes>
-        <Route element={<Private session={session} status={loading}/>}>
+        <Route element={<Private session={session} status={loading} />}>
           <Route element={<Home id={id} />} path='/' />
           <Route element={<Settings />} path='settings' />
           <Route element={<Search />} path='search' />

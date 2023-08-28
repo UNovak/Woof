@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react'
+
+// component imports
 import Address from '../components/address'
 import Togle from '../components/togle'
-import { useOwner } from '../utils/context'
-import { supabase } from '../supabase'
-import { useNavigate } from 'react-router-dom'
 import Loading from '../components/loading'
+
+// util imports
+import { useGlobal } from '../utils/context'
+import { supabase } from '../utils/supabase'
+import { useNavigate } from 'react-router-dom'
 
 const Register = () => {
   const navigate = useNavigate()
-  const { owner } = useOwner()
+  const { owner, setType } = useGlobal()
 
   const [email, setEmail] = useState('')
   const [firstName, setFirstName] = useState('')
@@ -17,23 +21,51 @@ const Register = () => {
   const [error, setError] = useState('')
   const [id, setId] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [render, setRender] = useState(false)
 
   const handleAddressChange = newAddress => {
     setAddress(newAddress)
   }
 
   useEffect(() => {
+    setType('register')
     const storedData = JSON.parse(sessionStorage.getItem('id'))
     const fetchedId = storedData ? storedData[0]?.id : null
 
-    if (fetchedId) {
+    if (fetchedId !== null) {
       setId(fetchedId)
-      getData()
-      console.log('Fatched id: ' + fetchedId)
+      getData() // Fetch data when id is available
     } else {
-      console.log('Fetching ID failed')
+      console.log('Fetching id failed')
+      fetchData() // Retry fetching when id is not available
     }
   }, [])
+
+  let retryInterval
+
+  const fetchData = () => {
+    const maxRetries = 5 // Maximum number of retries
+    let retries = 0
+
+    retryInterval = setInterval(() => {
+      const storedData = JSON.parse(sessionStorage.getItem('id'))
+      const fetchedId = storedData ? storedData[0]?.id : null
+
+      if (fetchedId !== null) {
+        clearInterval(retryInterval) // Clear the retry interval
+        setId(fetchedId)
+        getData()
+        setRender(true)
+        return // Fetch data when id is available
+      } else {
+        retries++
+        if (retries >= maxRetries) {
+          console.log('Timed out! Unable to fetch id.')
+          clearInterval(retryInterval)
+        }
+      }
+    }, 1000) // Retry every 1 second
+  }
 
   const getData = async () => {
     let { data: profiles, error } = await supabase
@@ -46,14 +78,15 @@ const Register = () => {
       const profile = profiles[0]
       setEmail(profile.email)
       setFirstName(profile.name)
-      setLastName(profile.surname || '')
-      setAddress(profile.address || '')
+      setLastName(profile.surname)
+      setAddress(profile.address)
+      console.log(profile)
     }
   }
 
   const handleSubmit = async e => {
     e.preventDefault() // Prevent form submission and page refresh
-    setLoading(true) // while submiting disable button
+    setLoading(true) // while submitting disable button
 
     if (!email || !firstName || !lastName || !address) {
       setError('All fields are required')
@@ -77,7 +110,7 @@ const Register = () => {
       console.log(data)
       navigate('/')
     }
-    setLoading(false)
+    setLoading(false) // enable button after submitted
   }
 
   const renderButton = () => {
@@ -96,7 +129,9 @@ const Register = () => {
     )
   }
 
-  return (
+  return !render ? (
+    <Loading />
+  ) : (
     <div className='justify-content-center align-items-center d-flex'>
       <div className='card mt-5 p-3 w-75' style={{ maxWidth: '400px' }}>
         <form onSubmit={handleSubmit}>
@@ -118,7 +153,8 @@ const Register = () => {
               type='text'
               className='form-control'
               id='name'
-              placeholder={'name'}
+              placeholder={'first name'}
+              value={firstName || ''}
               onChange={e => setFirstName(e.target.value)}
             />
             <label htmlFor='name'>name</label>
@@ -129,10 +165,11 @@ const Register = () => {
               type='text'
               className='form-control'
               id='lastname'
-              placeholder='surname'
+              placeholder='last name'
+              value={lastName || ''}
               onChange={e => setLastName(e.target.value)}
             />
-            <label htmlFor='lastname'>surname</label>
+            <label htmlFor='lastname'>last name</label>
           </div>
 
           <div className='form-floating mb-2'>
@@ -178,5 +215,3 @@ const Register = () => {
 }
 
 export default Register
-
-// TODO - remove navigation bar
