@@ -24,6 +24,15 @@ const Animal = ({ data, onDelete, onSave, onEdit, view }) => {
             <button className='btn btn-primary mt-3' onClick={() => onEdit()}>
               Edit
             </button>
+            <button
+              type='button'
+              className='btn btn-danger m-1'
+              onClick={e => {
+                e.preventDefault()
+                onDelete()
+              }}>
+              Delete
+            </button>
           </div>
         </div>
       )
@@ -45,15 +54,6 @@ const Animal = ({ data, onDelete, onSave, onEdit, view }) => {
                 id='description'
                 onChange={e => setFormDescription(e.target.value)}
               />
-              <button
-                type='button'
-                className='btn btn-danger m-1'
-                onClick={e => {
-                  e.preventDefault()
-                  onDelete()
-                }}>
-                Delete
-              </button>
               <button
                 type='buttonn'
                 className='btn btn-success m-1'
