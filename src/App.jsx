@@ -15,7 +15,6 @@ import Search from './pages/search'
 import Register from './pages/register'
 
 const App = () => {
-  const navigate = useNavigate()
   const [session, setSession] = useState(null)
   const [id, setId] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -65,7 +64,7 @@ const App = () => {
     <ContextProvider>
       <Routes>
         <Route element={<Private session={session} status={loading} />}>
-          <Route element={<Home id={id} />} path='/' />
+          <Route element={<Home />} path='/' />
           <Route element={<Settings />} path='settings' />
           <Route element={<Search />} path='search' />
           <Route element={<Register />} path='register' />

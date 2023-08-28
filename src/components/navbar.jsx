@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import logo from '../assets/logo.png'
 import { useGlobal } from '../utils/context'
@@ -6,7 +6,12 @@ import Togle from './togle'
 import SignOut from './signOut'
 
 const Navbar = () => {
-  const { type } = useGlobal()
+  const { type, owner } = useGlobal()
+
+  useEffect(() => {
+    console.log('updated navbar')
+  }, [type, owner])
+
   const extra = () => {
     return (
       <>
@@ -49,7 +54,7 @@ const Navbar = () => {
         </nav>
       )
 
-    if (type === 'owner')
+    if (owner)
       return (
         <nav className='navbar navbar-expand-lg bg-body-tertiary'>
           <div className='container-fluid'>
