@@ -5,12 +5,8 @@ import Owner from '../components/owner'
 import Guardian from '../components/guardian'
 
 const Home = () => {
-  const { owner } = useGlobal()
-
-  const storedData = JSON.parse(sessionStorage.getItem('id'))
-  const id = storedData ? storedData[0]?.id : null
-
-  return owner ? <Owner /> : <Guardian />
+  const { owner, id } = useGlobal()
+  return owner ? <Owner id={id} /> : <Guardian id={id} />
 }
 
 export default Home
