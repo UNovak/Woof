@@ -28,8 +28,8 @@ const Register = () => {
 
   useEffect(() => {
     setType('register')
-    if (id === null || id === undefined) {
-      console.log('something went wrong')
+    if (id === null) {
+      console.log(id)
     } else {
       getData()
     }
@@ -48,7 +48,6 @@ const Register = () => {
       setFirstName(profile.name)
       setLastName(profile.surname)
       setAddress(profile.address)
-      console.log(profile)
       setRender(true)
     }
   }

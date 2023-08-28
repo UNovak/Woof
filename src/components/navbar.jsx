@@ -9,7 +9,6 @@ const Navbar = () => {
   const { type, owner } = useGlobal()
 
   useEffect(() => {
-    console.log('updated navbar')
   }, [type, owner])
 
   const extra = () => {

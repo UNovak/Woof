@@ -21,15 +21,16 @@ export const ContextProvider = ({ children }) => {
   }, [])
 
   useEffect(() => {
-    console.log('owner: ' + owner)
-  }, [owner])
+    if (id === null) {
+      fetchId()
+    }
+  }, [owner, id])
 
   const fetchId = async () => {
     let { data: profiles, error } = await supabase.from('profiles').select('id')
     if (error) console.log(error)
     else {
       setId(profiles[0].id)
-      console.log(id)
     }
   }
 
