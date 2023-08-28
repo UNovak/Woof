@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react'
 import './togle.css'
-import { useOwner } from '../utils/context'
+import { useGlobal } from '../utils/context'
 
 const Togle = () => {
-  const { owner, handleOwner } = useOwner()
+  const { owner, handleOwner } = useGlobal()
 
   return (
     <div className='container-sm d-flex align-items-center justify-content-center'>

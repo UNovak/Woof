@@ -1,17 +1,16 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
+import { useGlobal } from '../utils/context'
+import Owner from '../components/owner'
+import Guardian from '../components/guardian'
 
-const Home = ({ id }) => {
-  console.log(JSON.parse(sessionStorage.getItem('id')))
-  console.log(JSON.parse(sessionStorage.getItem('session')))
-  return (
-    <div>
-      <p>id: {JSON.stringify(JSON.parse(sessionStorage.getItem('id')))}</p>
-      <p>
-        session: {JSON.stringify(JSON.parse(sessionStorage.getItem('session')))}
-      </p>
-    </div>
-  )
+const Home = () => {
+  const { owner } = useGlobal()
+
+  const storedData = JSON.parse(sessionStorage.getItem('id'))
+  const id = storedData ? storedData[0]?.id : null
+
+  return owner ? <Owner /> : <Guardian />
 }
 
 export default Home

@@ -1,11 +1,11 @@
 import './App.css'
-import { useState, useEffect, createContext } from 'react'
+import { useState, useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom'
-import Private from './utils/private'
-import { supabase } from './supabase'
-import { ContextProvider } from './utils/context'
 
-// component imports
+// util imports
+import Private from './utils/private'
+import { supabase } from './utils/supabase'
+import { ContextProvider } from './utils/context'
 
 // page imports
 import Auth from './pages/auth'
@@ -31,6 +31,7 @@ const App = () => {
   }, [])
 
   useEffect(() => {
+    setLoading(true)
     const getID = async () => {
       const { data: profiles, error } = await supabase
         .from('profiles')
@@ -52,6 +53,7 @@ const App = () => {
       sessionStorage.setItem('id', JSON.stringify(id))
       sessionStorage.setItem('session', JSON.stringify(session))
     }
+    setLoading(false)
   }, [session])
 
   const handleAuthentication = value => {
@@ -62,7 +64,7 @@ const App = () => {
     <ContextProvider>
       <Routes>
         <Route element={<Private session={session} status={loading} />}>
-          <Route element={<Home id={id} />} path='/' />
+          <Route element={<Home />} path='/' />
           <Route element={<Settings />} path='settings' />
           <Route element={<Search />} path='search' />
           <Route element={<Register />} path='register' />
