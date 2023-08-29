@@ -12,6 +12,10 @@ export const ContextProvider = ({ children }) => {
   const [type, setType] = useState('')
   const [id, setId] = useState(null)
 
+  useEffect(() => {
+    sessionStorage.setItem('owner', owner)
+  }, [])
+
   const handleOwner = () => {
     setOwner(!owner)
   }
@@ -24,7 +28,7 @@ export const ContextProvider = ({ children }) => {
     if (id === null) {
       fetchId()
     }
-  }, [owner, id])
+  }, [id])
 
   const fetchId = async () => {
     let { data: profiles, error } = await supabase.from('profiles').select('id')
@@ -35,6 +39,7 @@ export const ContextProvider = ({ children }) => {
   }
 
   const value = {
+    setOwner,
     owner,
     handleOwner,
     type,
