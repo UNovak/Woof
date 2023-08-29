@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react'
 
-const Animal = ({ data, onDelete, onSave, onEdit, view }) => {
+const Animal = ({ data, onDelete, onSave, onEdit, view, onUpload }) => {
   const { id, title, description } = data
 
   const [formTitle, setFormTitle] = useState(title || 'title')
@@ -77,3 +77,4 @@ export default Animal
 // TODO - implement photos on the cards
 // TODO - implement storing photos in supabase bucket
 // TODO - add styles to the card
+// TODO - uploading photos

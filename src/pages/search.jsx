@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { supabase } from '../utils/supabase'
 import { useGlobal } from '../utils/context'
 import Loading from '../components/loading'
+import Image from '../components/image'
 
 const Search = () => {
   const { id, owner, setType } = useGlobal()
   const [cards, setCards] = useState([])
   const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
     setLoading(true)
@@ -37,14 +40,23 @@ const Search = () => {
     getCards() // Call the function once per useEffect invocation
   }, [id])
 
+  useEffect(() => {
+    if (owner === false) {
+      setType('guardian')
+      navigate('/')
+    } else {
+      setType('owner')
+    }
+  }, [owner])
+
   return loading ? (
     <Loading />
   ) : (
-    <div className='row'>
+    <div className='row d-flex align-items-center justify-content-center'>
       {cards.map((card, index) => (
-        <div className='col-md-4' key={index}>
-          <div className='card'>
-            {/* <img src={card.image} alt="Service" className="card-img-top" /> */}
+        <div className='col-md-8' key={index}>
+          <div className='card mt-3' style={{ maxWidth: '500px' }}>
+            <Image type='search' src={null} />
             <div className='card-body'>
               <h5 className='card-title'>{card.title}</h5>
               <p className='card-text'>

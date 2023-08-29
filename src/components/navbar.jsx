@@ -8,8 +8,7 @@ import SignOut from './signOut'
 const Navbar = () => {
   const { type, owner } = useGlobal()
 
-  useEffect(() => {
-  }, [type, owner])
+  useEffect(() => {}, [type, owner])
 
   const extra = () => {
     return (
@@ -64,7 +63,7 @@ const Navbar = () => {
                   <Link to='settings'>Profile</Link>
                 </li>
                 <li className='nav-item'>
-                  <Link to='search'>Search</Link>
+                  <Link to='search'>Available services</Link>
                 </li>
                 <li className='nav-item'>
                   <Link to='search'>History</Link>

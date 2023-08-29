@@ -62,6 +62,7 @@ const Service = ({ data, onDelete, onSave, onEdit, onRadio, view }) => {
               <input
                 id='rate'
                 type='number'
+                placeholder='price'
                 className='form-control-sm m-2'
                 onChange={e => setFormRate(e.target.value)}
               />
@@ -70,6 +71,7 @@ const Service = ({ data, onDelete, onSave, onEdit, onRadio, view }) => {
                 id='description'
                 onChange={e => setFormDescription(e.target.value)}
               />
+              <p>How will you charge them?</p>
               <div className='form-check'>
                 <div
                   onClick={() => setFormHourly(!formHourly)}
