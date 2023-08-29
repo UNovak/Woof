@@ -12,14 +12,13 @@ import { useNavigate } from 'react-router-dom'
 
 const Register = () => {
   const navigate = useNavigate()
-  const { owner, setType } = useGlobal()
+  const { owner, setType, id } = useGlobal()
 
   const [email, setEmail] = useState('')
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [address, setAddress] = useState('')
   const [error, setError] = useState('')
-  const [id, setId] = useState(null)
   const [loading, setLoading] = useState(false)
   const [render, setRender] = useState(false)
 
@@ -29,43 +28,12 @@ const Register = () => {
 
   useEffect(() => {
     setType('register')
-    const storedData = JSON.parse(sessionStorage.getItem('id'))
-    const fetchedId = storedData ? storedData[0]?.id : null
-
-    if (fetchedId !== null) {
-      setId(fetchedId)
-      getData() // Fetch data when id is available
+    if (id === null) {
+      console.log(id)
     } else {
-      console.log('Fetching id failed')
-      fetchData() // Retry fetching when id is not available
+      getData()
     }
-  }, [])
-
-  let retryInterval
-
-  const fetchData = () => {
-    const maxRetries = 5 // Maximum number of retries
-    let retries = 0
-
-    retryInterval = setInterval(() => {
-      const storedData = JSON.parse(sessionStorage.getItem('id'))
-      const fetchedId = storedData ? storedData[0]?.id : null
-
-      if (fetchedId !== null) {
-        clearInterval(retryInterval) // Clear the retry interval
-        setId(fetchedId)
-        getData()
-        setRender(true)
-        return // Fetch data when id is available
-      } else {
-        retries++
-        if (retries >= maxRetries) {
-          console.log('Timed out! Unable to fetch id.')
-          clearInterval(retryInterval)
-        }
-      }
-    }, 1000) // Retry every 1 second
-  }
+  }, [id])
 
   const getData = async () => {
     let { data: profiles, error } = await supabase
@@ -80,7 +48,7 @@ const Register = () => {
       setFirstName(profile.name)
       setLastName(profile.surname)
       setAddress(profile.address)
-      console.log(profile)
+      setRender(true)
     }
   }
 

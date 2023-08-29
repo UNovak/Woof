@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
+import { supabase } from './supabase'
 
 export const Context = createContext()
 
@@ -9,20 +10,41 @@ export const useGlobal = () => {
 export const ContextProvider = ({ children }) => {
   const [owner, setOwner] = useState(true)
   const [type, setType] = useState('')
+  const [id, setId] = useState(null)
+
+  useEffect(() => {
+    sessionStorage.setItem('owner', owner)
+  }, [])
 
   const handleOwner = () => {
     setOwner(!owner)
   }
 
   useEffect(() => {
-    console.log('owner: ' + owner)
-  }, [owner])
+    fetchId()
+  }, [])
+
+  useEffect(() => {
+    if (id === null) {
+      fetchId()
+    }
+  }, [id])
+
+  const fetchId = async () => {
+    let { data: profiles, error } = await supabase.from('profiles').select('id')
+    if (error) console.log(error)
+    else {
+      setId(profiles[0].id)
+    }
+  }
 
   const value = {
+    setOwner,
     owner,
     handleOwner,
     type,
     setType,
+    id,
   }
 
   return <Context.Provider value={value}>{children}</Context.Provider>

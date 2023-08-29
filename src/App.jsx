@@ -16,7 +16,6 @@ import Register from './pages/register'
 
 const App = () => {
   const [session, setSession] = useState(null)
-  const [id, setId] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -25,32 +24,15 @@ const App = () => {
 
     if (storedSession && storedId) {
       setSession(JSON.parse(storedSession))
-      setId(JSON.parse(storedId))
+      setLoading(false)
     }
-    setLoading(false)
   }, [])
 
   useEffect(() => {
     setLoading(true)
-    const getID = async () => {
-      const { data: profiles, error } = await supabase
-        .from('profiles')
-        .select('id')
-
-      if (error) {
-        console.log('Error fetching profiles:', error)
-        return
-      } else {
-        setId(profiles)
-        sessionStorage.setItem('id', JSON.stringify(profiles))
-      }
-    }
-
     if (session === null) {
       sessionStorage.clear()
     } else {
-      getID()
-      sessionStorage.setItem('id', JSON.stringify(id))
       sessionStorage.setItem('session', JSON.stringify(session))
     }
     setLoading(false)
@@ -61,21 +43,25 @@ const App = () => {
   }
 
   return (
-    <ContextProvider>
-      <Routes>
-        <Route element={<Private session={session} status={loading} />}>
-          <Route element={<Home />} path='/' />
-          <Route element={<Settings />} path='settings' />
-          <Route element={<Search />} path='search' />
-          <Route element={<Register />} path='register' />
-        </Route>
-        <Route
-          element={<Auth onAuthentication={handleAuthentication} />}
-          path='/login'
-        />
-      </Routes>
-    </ContextProvider>
+      <ContextProvider>
+        <Routes>
+          <Route element={<Private session={session} status={loading} />}>
+            <Route element={<Home />} path='/' />
+            <Route element={<Settings />} path='settings' />
+            <Route element={<Search />} path='search' />
+            <Route element={<Register />} path='register' />
+          </Route>
+          <Route
+            element={<Auth onAuthentication={handleAuthentication} />}
+            path='/login'
+          />
+        </Routes>
+      </ContextProvider>
   )
 }
 
 export default App
+
+//BUG: State managment
+// you need to refresh the page often or see no results?
+// possible error in component
