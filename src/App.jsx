@@ -43,21 +43,25 @@ const App = () => {
   }
 
   return (
-    <ContextProvider>
-      <Routes>
-        <Route element={<Private session={session} status={loading} />}>
-          <Route element={<Home />} path='/' />
-          <Route element={<Settings />} path='settings' />
-          <Route element={<Search />} path='search' />
-          <Route element={<Register />} path='register' />
-        </Route>
-        <Route
-          element={<Auth onAuthentication={handleAuthentication} />}
-          path='/login'
-        />
-      </Routes>
-    </ContextProvider>
+      <ContextProvider>
+        <Routes>
+          <Route element={<Private session={session} status={loading} />}>
+            <Route element={<Home />} path='/' />
+            <Route element={<Settings />} path='settings' />
+            <Route element={<Search />} path='search' />
+            <Route element={<Register />} path='register' />
+          </Route>
+          <Route
+            element={<Auth onAuthentication={handleAuthentication} />}
+            path='/login'
+          />
+        </Routes>
+      </ContextProvider>
   )
 }
 
 export default App
+
+//BUG: State managment
+// you need to refresh the page often or see no results?
+// possible error in component
