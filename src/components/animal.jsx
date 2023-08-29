@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 
 const Animal = ({ data, onDelete, onSave, onEdit, view }) => {
   const { id, title, description } = data
@@ -73,3 +73,7 @@ const Animal = ({ data, onDelete, onSave, onEdit, view }) => {
 }
 
 export default Animal
+
+// TODO - implement photos on the cards
+// TODO - implement storing photos in supabase bucket
+// TODO - add styles to the card
